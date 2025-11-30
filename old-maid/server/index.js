@@ -435,6 +435,8 @@ app.get('/', (req, res) => {
   res.send('Old Maid Game Server Running');
 });
 
-server.listen(4000, '0.0.0.0', () => {
-  console.log('Server running on http://0.0.0.0:4000');
+const PORT = process.env.PORT || 4000;
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });

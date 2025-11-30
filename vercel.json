@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "old-maid-frontend",
+  "builds": [
+    {
+      "src": "old-maid/client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/old-maid/client/build/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_BACKEND_URL": "@backend_url"
+  }
+}

@@ -189,7 +189,18 @@ function App() {
   // Automatically connect to WebSocket on mount
   useEffect(() => {
     if (wsRef.current) return;
-    const socket = new window.WebSocket('ws://' + window.location.hostname + ':4000');
+    
+    // Production-ready WebSocket connection
+    const getWebSocketUrl = () => {
+      if (process.env.NODE_ENV === 'production') {
+        // Use environment variable if available, otherwise use default production URL
+        return process.env.REACT_APP_BACKEND_URL || 'wss://your-backend-url.railway.app';
+      }
+      // Development mode
+      return 'ws://' + window.location.hostname + ':4000';
+    };
+    
+    const socket = new window.WebSocket(getWebSocketUrl());
     socket.onopen = () => {
       setWs(socket);
       wsRef.current = socket;
