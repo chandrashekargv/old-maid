@@ -1,14 +1,22 @@
 {
   "name": "old-maid-server",
   "version": "1.0.0",
+  "description": "WebSocket server for Old Maid multiplayer card game",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "express": "^4.18.2",
     "ws": "^8.13.0",
     "cors": "^2.8.5"
-  }
+  },
+  "keywords": ["websocket", "card-game", "multiplayer", "old-maid"],
+  "author": "Your Name",
+  "license": "MIT"
 }
