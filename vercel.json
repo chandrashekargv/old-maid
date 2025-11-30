@@ -17,6 +17,6 @@
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "@backend_url"
+    "REACT_APP_BACKEND_URL": "wss://old-maid-production.up.railway.app"
   }
 }

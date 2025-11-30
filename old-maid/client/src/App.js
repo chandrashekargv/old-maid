@@ -193,8 +193,8 @@ function App() {
     // Production-ready WebSocket connection
     const getWebSocketUrl = () => {
       if (process.env.NODE_ENV === 'production') {
-        // Use environment variable if available, otherwise use default production URL
-        return process.env.REACT_APP_BACKEND_URL || 'wss://your-backend-url.railway.app';
+        // Use environment variable if available, otherwise use Railway URL
+        return process.env.REACT_APP_BACKEND_URL || 'wss://old-maid-production.up.railway.app';
       }
       // Development mode
       return 'ws://' + window.location.hostname + ':4000';
