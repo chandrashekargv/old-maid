@@ -1,5 +1,20 @@
 # 🌐 Deploying Old Maid for Global Multiplayer
 
+## 🌐 **LIVE DEPLOYMENT URLs**
+
+### **🎮 Play the Game Now!**
+**Frontend**: https://chandrashekargv.github.io/old-maid  
+**Backend**: https://old-maid-production.up.railway.app
+
+### **🚀 Quick Start for Players**
+1. Visit: **https://chandrashekargv.github.io/old-maid**
+2. Create a new game with a custom Game ID
+3. Share the Game ID with friends
+4. Friends join using the same Game ID
+5. Start playing Old Maid together!
+
+---
+
 ## 🎯 **Best Deployment Strategy for Global Play**
 
 Since this is a **real-time multiplayer game** with WebSockets, here's the optimal deployment approach:
