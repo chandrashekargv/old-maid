@@ -235,7 +235,19 @@ wss.on('connection', (ws) => {
         loser: null,
         winner: null
       };
-      ws.send(JSON.stringify({ type: 'game_created', gameId }));
+      
+      // Auto-join the creator if creatorName is provided
+      if (data.creatorName && typeof data.creatorName === 'string' && data.creatorName.trim().length > 0) {
+        const creatorName = data.creatorName.trim();
+        playerId = Math.random().toString(36).substr(2, 8);
+        games[gameId].players.push({ id: playerId, name: creatorName, hand: [], finished: false });
+        playerSockets[playerId] = ws;
+        console.log(`Creator ${creatorName} auto-joined game ${gameId}`);
+        ws.send(JSON.stringify({ type: 'game_created', gameId, joined: true, playerId }));
+        broadcastGame(gameId);
+      } else {
+        ws.send(JSON.stringify({ type: 'game_created', gameId }));
+      }
     } else if (data.type === 'join_game') {
       // Join an existing game
       const { gameId, name } = data;

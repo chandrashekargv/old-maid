@@ -236,12 +236,13 @@ function App() {
       setError("");
       if (data.type === 'game_created') {
         setGameId(data.gameId);
-        // Auto-join as host with current name from ref
-        const currentName = nameRef.current.trim();
-        if (currentName) {
-          ws.send(JSON.stringify({ type: 'join_game', gameId: data.gameId, name: currentName }));
+        if (data.joined && data.playerId) {
+          // Creator was auto-joined
+          setPlayerId(data.playerId);
+          setStep('lobby');
         } else {
-          setError("Please enter your name first.");
+          // Need to join manually (shouldn't happen with our new logic)
+          setStep('lobby');
         }
       } else if (data.type === 'joined') {
         setPlayerId(data.playerId);
@@ -282,8 +283,12 @@ function App() {
       return;
     }
     
-    // Send custom game ID if provided
-    const gameData = { type: 'create_game', reverse };
+    // Send custom game ID if provided, along with the creator's name
+    const gameData = { 
+      type: 'create_game', 
+      reverse,
+      creatorName: name.trim() // Pass creator name with the request
+    };
     if (customGameId && customGameId.trim()) {
       gameData.customGameId = customGameId.trim();
     }
