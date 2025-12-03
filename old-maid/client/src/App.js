@@ -185,6 +185,12 @@ function App() {
   const [draggedIdx, setDraggedIdx] = useState(null);
   const [animateIdx, setAnimateIdx] = useState(null);
   const wsRef = useRef(null);
+  const nameRef = useRef('');
+
+  // Keep nameRef in sync with name state
+  useEffect(() => {
+    nameRef.current = name;
+  }, [name]);
 
   // Automatically connect to WebSocket on mount
   useEffect(() => {
@@ -230,8 +236,13 @@ function App() {
       setError("");
       if (data.type === 'game_created') {
         setGameId(data.gameId);
-        // Auto-join as host with trimmed name
-        ws.send(JSON.stringify({ type: 'join_game', gameId: data.gameId, name: name.trim() }));
+        // Auto-join as host with current name from ref
+        const currentName = nameRef.current.trim();
+        if (currentName) {
+          ws.send(JSON.stringify({ type: 'join_game', gameId: data.gameId, name: currentName }));
+        } else {
+          setError("Please enter your name first.");
+        }
       } else if (data.type === 'joined') {
         setPlayerId(data.playerId);
         setGameId(data.gameId);
