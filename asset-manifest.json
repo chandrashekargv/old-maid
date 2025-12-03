@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/old-maid/static/css/main.777e9eda.css",
-    "main.js": "/old-maid/static/js/main.e1d229c1.js",
+    "main.css": "/old-maid/static/css/main.2f9635fd.css",
+    "main.js": "/old-maid/static/js/main.a0620d7c.js",
     "index.html": "/old-maid/index.html",
-    "main.777e9eda.css.map": "/old-maid/static/css/main.777e9eda.css.map",
-    "main.e1d229c1.js.map": "/old-maid/static/js/main.e1d229c1.js.map"
+    "main.2f9635fd.css.map": "/old-maid/static/css/main.2f9635fd.css.map",
+    "main.a0620d7c.js.map": "/old-maid/static/js/main.a0620d7c.js.map"
   },
   "entrypoints": [
-    "static/css/main.777e9eda.css",
-    "static/js/main.e1d229c1.js"
+    "static/css/main.2f9635fd.css",
+    "static/js/main.a0620d7c.js"
   ]
 }
