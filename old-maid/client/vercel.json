@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "env": {
+    "REACT_APP_BACKEND_URL": "wss://old-maid-production.up.railway.app"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

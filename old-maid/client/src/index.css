@@ -231,6 +231,12 @@ input {
   font-size: 1.1rem;
 }
 
+.host-indicator {
+  font-size: 0.85rem;
+  color: #7c5fe6;
+  font-weight: 500;
+}
+
 .card-count {
   font-size: 0.85rem;
   color: #6c757d;
@@ -676,6 +682,15 @@ input {
   flex-wrap: wrap;
 }
 
+.lobby-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
 .centered {
   display: flex;
   justify-content: center;
@@ -797,11 +812,23 @@ input {
   }
   
   .joker-symbol {
-    font-size: 28px;
+    font-size: 24px;
+    margin-bottom: 2px;
   }
   
   .joker-text {
-    font-size: 12px;
+    font-size: 10px;
+    line-height: 1;
+  }
+  
+  .joker-content .corner-index .rank {
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .joker-content .corner-index .suit {
+    font-size: 8px;
+    line-height: 1;
   }
   .avatar {
     width: 7vw;
@@ -851,5 +878,15 @@ input {
     font-size: 0.9rem;
     padding: 2vw 4vw;
     border-radius: 5px;
+  }
+  .lobby-actions {
+    margin-top: 3vw;
+    gap: 3vw;
+  }
+  
+  .lobby-actions .main-btn, 
+  .lobby-actions .secondary-btn {
+    font-size: 0.9rem;
+    padding: 2.5vw 4vw;
   }
 }

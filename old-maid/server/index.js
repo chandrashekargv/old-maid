@@ -308,6 +308,55 @@ wss.on('connection', (ws) => {
       
       // Notify all players that game is reset
       broadcastGame(gameId);
+    } else if (data.type === 'leave_game') {
+      // Player leaves the game
+      const { gameId, playerId } = data;
+      const game = games[gameId];
+      
+      if (!game) {
+        ws.send(JSON.stringify({ error: 'Game not found.' }));
+        return;
+      }
+      
+      // Remove player from game
+      const playerIndex = game.players.findIndex(p => p.id === playerId);
+      if (playerIndex !== -1) {
+        game.players.splice(playerIndex, 1);
+        console.log(`Player ${playerId} left game ${gameId}`);
+        
+        // If game was started and player had cards, redistribute them
+        if (game.started && game.players.length > 0) {
+          // If current turn player left, advance turn
+          if (game.currentTurn >= game.players.length) {
+            game.currentTurn = 0;
+          }
+          
+          // Check if game should end due to too few players
+          if (game.players.length < 2) {
+            game.started = false;
+            game.winner = null;
+            game.loser = null;
+          }
+        }
+        
+        // If no players left, clean up the game
+        if (game.players.length === 0) {
+          delete games[gameId];
+          console.log(`Game ${gameId} deleted - no players remaining`);
+        } else {
+          // Broadcast updated game state
+          broadcastGame(gameId);
+        }
+      }
+      
+      // Remove player socket
+      if (playerSockets[playerId]) {
+        delete playerSockets[playerId];
+      }
+      
+      // Send confirmation to leaving player
+      ws.send(JSON.stringify({ type: 'left_game' }));
+      
     } else if (data.type === 'discard_pairs') {
       // Discard pairs from hand
       const { gameId, playerId } = data;
@@ -322,6 +371,11 @@ wss.on('connection', (ws) => {
         return;
       }
       player.hand = discardPairs(player.hand);
+      
+      // Auto-shuffle hand after discarding pairs
+      if (player.hand.length > 0) {
+        player.hand = shuffle([...player.hand]);
+      }
       
       // Check if player finished after discarding pairs
       if (player.hand.length === 0) {
@@ -397,6 +451,13 @@ wss.on('connection', (ws) => {
       const card = target.hand.splice(cardIndex, 1)[0];
       player.hand.push(card);
       player.hand = discardPairs(player.hand);
+      
+      // Auto-shuffle both players' hands after card pick
+      player.hand = shuffle([...player.hand]);
+      if (target.hand.length > 0) {
+        target.hand = shuffle([...target.hand]);
+      }
+      
       playerSockets[playerId].send(JSON.stringify({ type: 'hand', hand: player.hand }));
       playerSockets[targetId].send(JSON.stringify({ type: 'hand', hand: target.hand }));
       // Check for finish

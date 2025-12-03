@@ -230,8 +230,8 @@ function App() {
       setError("");
       if (data.type === 'game_created') {
         setGameId(data.gameId);
-        // Auto-join as host
-        ws.send(JSON.stringify({ type: 'join_game', gameId: data.gameId, name: name || 'Host' }));
+        // Auto-join as host with trimmed name
+        ws.send(JSON.stringify({ type: 'join_game', gameId: data.gameId, name: name.trim() }));
       } else if (data.type === 'joined') {
         setPlayerId(data.playerId);
         setGameId(data.gameId);
@@ -262,8 +262,12 @@ function App() {
 
   function createGame() {
     setError("");
-    if (!name) {
+    if (!name || !name.trim()) {
       setError("Please enter your name first.");
+      return;
+    }
+    if (!ws || ws.readyState !== ws.OPEN) {
+      setError("WebSocket not connected. Please refresh and try again.");
       return;
     }
     
@@ -292,6 +296,26 @@ function App() {
   function startGame() {
     setError("");
     ws.send(JSON.stringify({ type: 'start_game', gameId }));
+  }
+
+  function leaveGame() {
+    setError("");
+    if (!ws || ws.readyState !== ws.OPEN) {
+      setError("WebSocket not connected. Please refresh and try again.");
+      return;
+    }
+    ws.send(JSON.stringify({ type: 'leave_game', gameId, playerId }));
+    
+    // Reset local state
+    setStep('menu');
+    setGameId('');
+    setPlayerId('');
+    setPlayers([]);
+    setHand([]);
+    setWinner(null);
+    setLoser(null);
+    setStarted(false);
+    setCurrentTurn(0);
   }
 
   function startNewGame() {
@@ -375,7 +399,7 @@ function App() {
         <div className="lobby-card vertical">
           <h2>Lobby</h2>
           <div><strong>Game ID:</strong> {gameId}</div>
-          <div><strong>Players:</strong> {players.map(p => p.name).join(', ')}</div>
+          <div><strong>Players:</strong> {players.map((p, idx) => idx === 0 ? `${p.name} (Host)` : p.name).join(', ')}</div>
           <div className="lobby-info">
             <div>👥 <strong>{players.length}</strong> players ready</div>
             {players.length >= 2 && (
@@ -383,7 +407,10 @@ function App() {
             )}
             <div>🎯 <strong>Sequential picking:</strong> Clockwise turn order</div>
           </div>
-          <button className="main-btn" onClick={startGame} disabled={started}>Start Game</button>
+          <div className="lobby-actions">
+            <button className="main-btn" onClick={startGame} disabled={started}>Start Game</button>
+            <button className="secondary-btn" onClick={leaveGame}>🚪 Leave Game</button>
+          </div>
         </div>
       )}
       {ws && step === 'game' && started && (
@@ -448,7 +475,10 @@ function App() {
                         <div className="player-info">
                           <div className="player-position">{idx + 1}</div>
                           <Avatar name={p.name} />
-                          <span className="player-name">{p.name}</span>
+                          <span className="player-name">
+                            {p.name}
+                            {idx === 0 && <span className="host-indicator"> (Host)</span>}
+                          </span>
                           <span className="card-count">({p.handCount} cards)</span>
                           {idx === currentTurn && <span className="turn-indicator"> ⏳</span>}
                           {p.finished && <span className="finished"> (Finished)</span>}

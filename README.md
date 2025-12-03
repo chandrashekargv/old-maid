@@ -4,7 +4,14 @@ A complete implementation of the classic Old Maid card game with modern web tech
 
 ## 🎮 **Live Demo**
 
-Play the game online: [Old Maid Multiplayer](http://localhost:3000) *(when running locally)*
+**🌐 Play Online Now**: https://chandrashekargv.github.io/old-maid
+
+**🎯 How to Play with Friends**:
+1. Visit the game URL above
+2. Create a game with a custom ID (e.g., "friends-night")  
+3. Share the Game ID with friends
+4. Friends join using the same Game ID
+5. Start playing together in real-time!
 
 ## ✨ **Features**
 
