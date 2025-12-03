@@ -239,11 +239,12 @@ wss.on('connection', (ws) => {
       // Auto-join the creator if creatorName is provided
       if (data.creatorName && typeof data.creatorName === 'string' && data.creatorName.trim().length > 0) {
         const creatorName = data.creatorName.trim();
-        playerId = Math.random().toString(36).substr(2, 8);
-        games[gameId].players.push({ id: playerId, name: creatorName, hand: [], finished: false });
-        playerSockets[playerId] = ws;
-        console.log(`Creator ${creatorName} auto-joined game ${gameId}`);
-        ws.send(JSON.stringify({ type: 'game_created', gameId, joined: true, playerId }));
+        const creatorPlayerId = Math.random().toString(36).substr(2, 8);
+        playerId = creatorPlayerId; // Set the connection's playerId
+        games[gameId].players.push({ id: creatorPlayerId, name: creatorName, hand: [], finished: false });
+        playerSockets[creatorPlayerId] = ws;
+        console.log(`Creator ${creatorName} auto-joined game ${gameId} with ID ${creatorPlayerId}`);
+        ws.send(JSON.stringify({ type: 'game_created', gameId, joined: true, playerId: creatorPlayerId }));
         broadcastGame(gameId);
       } else {
         ws.send(JSON.stringify({ type: 'game_created', gameId }));
@@ -263,10 +264,12 @@ wss.on('connection', (ws) => {
         ws.send(JSON.stringify({ error: 'Game is full (max 8 players).' }));
         return;
       }
-      playerId = Math.random().toString(36).substr(2, 8);
-      games[gameId].players.push({ id: playerId, name, hand: [], finished: false });
-      playerSockets[playerId] = ws;
-      ws.send(JSON.stringify({ type: 'joined', playerId, gameId }));
+      const newPlayerId = Math.random().toString(36).substr(2, 8);
+      playerId = newPlayerId; // Set the connection's playerId
+      games[gameId].players.push({ id: newPlayerId, name, hand: [], finished: false });
+      playerSockets[newPlayerId] = ws;
+      console.log(`Player ${name} joined game ${gameId} with ID ${newPlayerId}`);
+      ws.send(JSON.stringify({ type: 'joined', playerId: newPlayerId, gameId }));
       broadcastGame(gameId);
     } else if (data.type === 'start_game') {
       // Start the game
